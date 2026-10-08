@@ -11,6 +11,10 @@ nav{
     width: 80px;
 }
 
+#moneylogo{
+    width: 80px;
+}
+
 nav ul {
   list-style-type: none;
   margin: 5px;

@@ -5,19 +5,20 @@ nav{
     left: 0;
     z-index: 1000;
     background-color: rgb(255, 146, 197);
-    list-style-type: none;
-}
-#shoplogo{
-    width: 80px;
-}
-
-#moneylogo{
-    width: 80px;
 }
 
 nav ul {
   list-style-type: none;
   margin: 5px;
   padding: 5px;
+}
 
+#shoplogo{
+    width: 80px;
+}
+
+#moneylogo{
+    width: 90px;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }

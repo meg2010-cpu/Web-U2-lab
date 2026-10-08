@@ -1,8 +1,19 @@
 nav{
-    width: 100%;
+    width: 25%;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-    background-color: palevioletred;
+    background-color: rgb(255, 146, 197);
+    list-style-type: none;
+}
+#shoplogo{
+    width: 80px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 5px;
+  padding: 5px;
+
 }

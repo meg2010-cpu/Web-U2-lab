@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popup Example</title>
+  <style>
+    /* Style for the popup box */
+    .popup-box {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    /* Style for the open popup state */
+    .popup-box.active {
+      display: block;
+    }
+
+    /* Background overlay */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Button to open the popup -->
+  <button id="openBtn">Open Popup</button>
+
+  <!-- Overlay background -->
+  <div id="overlay" class="overlay"></div>
+
+  <!-- The Popup Div -->
+  <div id="popup" class="popup-box">
+    <h2>Hello!</h2>
+    <p>This is a popup message.</p>
+    <!-- Close Button -->
+    <button id="closeBtn">Close</button>
+  </div>
+
+  <script>
+    const openBtn = document.getElementById('openBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const popup = document.getElementById('popup');
+    const overlay = document.getElementById('overlay');
+
+    // Show popup
+    openBtn.addEventListener('click', () => {
+      popup.classList.add('active');
+      overlay.classList.add('active');
+    });
+
+    // Hide popup when close button is clicked
+    closeBtn.addEventListener('click', () => {
+      popup.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    // Optional: Hide popup when clicking outside on the overlay
+    overlay.addEventListener('click', () => {
+      popup.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>

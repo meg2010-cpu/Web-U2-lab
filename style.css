@@ -53,3 +53,8 @@ nav ul {
     background-position: center;
     background-attachment: fixed;
 }
+#playbutton{
+    width: 200px;
+    margin: 0;
+    padding: 0;
+}

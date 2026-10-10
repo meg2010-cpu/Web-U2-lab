@@ -64,11 +64,12 @@ nav ul {
 #instructionbutton-container{
     width: auto;
     height: auto;
+    margin-bottom: 20px;
 }
 #buttoncontainer{
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 510px;
-    gap: 100px;
+    margin-top: 600px;
+    gap: 80px;
 }

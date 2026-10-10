@@ -1,5 +1,5 @@
 nav{
-    width: 25%;
+   
     position: fixed;
     top: 0;
     left: 0;
@@ -17,6 +17,7 @@ nav ul {
 }
 #moneyAmount{
     color: white;
+    margin-right: 15px;
 }
 #shoplogo{
     width: 80px;

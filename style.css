@@ -38,11 +38,11 @@ nav ul {
 }
 
 .background{
-    background-color: #ffd7ff;
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    background-image: url("unit 2 dev project gui.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 .gamescreen{
     background-image: url("gamepage.png");

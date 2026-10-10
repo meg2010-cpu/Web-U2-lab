@@ -37,7 +37,8 @@ nav ul {
     font-style: normal;
 }
 
-.homescreen img{
+.background{
+    background-color: #ffd7ff;
     display: block;
     width: 100%;
     height: 100%;

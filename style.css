@@ -58,14 +58,17 @@ nav ul {
     background-attachment: fixed;
 }
 #playbutton-container{
-    margin-left: 200px;
-    margin-top: 600px;
-    width: 140px;
+    width: auto;
     height: auto;
 }
 #instructionbutton-container{
-    margin-left: 100px;
-    margin-top: 600px;
-    width: 100px;
+    width: auto;
     height: auto;
+}
+#buttoncontainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 510px;
+    gap: 100px;
 }

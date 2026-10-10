@@ -57,9 +57,8 @@ nav ul {
     background-position: center;
     background-attachment: fixed;
 }
-#playbutton{
-    width: 27%;
-    margin-left: 48%;
-    margin-top: 68%;
+#playbutton-container{
+    margin-left: 60%;
+    margin-top: 60%;
     
 }

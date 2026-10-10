@@ -63,3 +63,9 @@ nav ul {
     width: 140px;
     height: auto;
 }
+#instructionbutton-container{
+    margin-left: 100px;
+    margin-top: 600px;
+    width: 100px;
+    height: auto;
+}

@@ -58,7 +58,8 @@ nav ul {
     background-attachment: fixed;
 }
 #playbutton-container{
-    margin-left: 60%;
-    margin-top: 60%;
-    
+    margin-left: 200px;
+    margin-top: 600px;
+    width: 140px;
+    height: auto;
 }

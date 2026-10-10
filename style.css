@@ -31,8 +31,15 @@ nav ul {
 }
 
 .pixelify-sans {
-  font-family: "Pixelify Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400; /* 400-700 */
-  font-style: normal;
+    font-family: "Pixelify Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* 400-700 */
+    font-style: normal;
+}
+
+.homescreen img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

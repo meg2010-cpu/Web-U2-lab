@@ -1,8 +1,8 @@
 //instructions page popup
-const instructionsBtn = document.getElementById('instructionsBtn');
-const closeBtn = document.getElementById('closeBtn');
-const popup = document.getElementById('popup');
-const overlay = document.getElementById('overlay');
+let instructionsBtn = document.querySelector('#instructionsBtn');
+let closeBtn = document.querySelector('#closeBtn');
+let popup = document.querySelector('#popup');
+let overlay = document.querySelector('#overlay');
 
 instructionsBtn.addEventListener('click', () => {
     popup.classList.add('active');

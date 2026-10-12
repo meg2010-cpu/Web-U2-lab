@@ -137,7 +137,3 @@ nav ul {
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
-
-.popup-content {
-    white-space: pre-wrap;
-}

@@ -137,6 +137,45 @@ nav ul {
     z-index: 999;
 }
 
+.ticket {
+    position: absolute;
+    top: 80px;
+    left: 75%;
+    width: 400px;
+    height: 250px;
+}
+
+.ticket-text {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 340px;
+    text-align: center;
+}
+
+.ticket-text p {
+    margin-bottom: 10px;
+}
+
+.ticket-text ul {
+    text-align: left;
+    padding-left: 30px;
+    margin-top: 0;
+}
+
+.sendbutton-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#sendbutton {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
 .shopscreen {
     background-color: #ffd2fb;
 }

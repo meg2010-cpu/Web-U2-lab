@@ -13,34 +13,29 @@ let recipies = [
 		ingredients: ["Coffee", "2% Milk"],
 		price: 5
 	},
-    {
-        name: "Classic Oat Coffee",
-        ingredients: ["Coffee", "Oat Milk"],
-        price: 5
-    },
-    {
-        name: "classic almond coffee",
-        ingredients: ["Coffee", "Almond Milk"],
-        price: 5
-    },
+	{
+		name: "Classic Oat Coffee",
+		ingredients: ["Coffee", "Oat Milk"],
+		price: 5
+	},
+	{
+		name: "Classic Almond Coffee",
+		ingredients: ["Coffee", "Almond Milk"],
+		price: 5
+	},
 	{
 		name: "Vanilla 2% Coffee",
 		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup"],
 		price: 6
 	},
 	{
-		name: "Cinnamon Vanilla Coffee",
-		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup", "Cinnamon"],
-		price: 7
-	},
-	{
 		name: "Chocolate Mocha",
-		ingredients: ["Coffee", "2% Milk", "Chocolate Syrup"],
+		ingredients: ["Coffee", "2% Milk", "Chocolate"],
 		price: 6
 	},
 	{
 		name: "Vanilla Mocha",
-		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup", "Chocolate Syrup"],
+		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup", "Chocolate"],
 		price: 7
 	},
 	{
@@ -49,18 +44,8 @@ let recipies = [
 		price: 7
 	},
 	{
-		name: "Pumpkin Vanilla Coffee",
-		ingredients: ["Coffee", "2% Milk", "Pumpkin Syrup", "Vanilla Syrup"],
-		price: 7
-	},
-	{
 		name: "Oat Milk Vanilla Coffee",
 		ingredients: ["Coffee", "Oat Milk", "Vanilla Syrup"],
-		price: 6
-	},
-	{
-		name: "Oat Milk Mocha",
-		ingredients: ["Coffee", "Oat Milk", "Chocolate Syrup"],
 		price: 6
 	},
 	{
@@ -75,17 +60,17 @@ let recipies = [
 	},
 	{
 		name: "Almond Chocolate Coffee",
-		ingredients: ["Coffee", "Almond Milk", "Chocolate Syrup"],
+		ingredients: ["Coffee", "Almond Milk", "Chocolate"],
 		price: 6
 	},
 	{
 		name: "Strawberry Almond Latte",
-		ingredients: ["Coffee", "Almond Milk", "Strawberry Syrup"],
+		ingredients: ["Coffee", "Almond Milk", "Strawberry"],
 		price: 6
 	},
 	{
 		name: "Strawberry Cream Coffee",
-		ingredients: ["Coffee", "2% Milk", "Strawberry Syrup", "Whipped Cream"],
+		ingredients: ["Coffee", "2% Milk", "Strawberry", "Whipped Cream"],
 		price: 7
 	},
 	{
@@ -99,23 +84,13 @@ let recipies = [
 		price: 7
 	},
 	{
-		name: "Chocolate Drizzle Coffee",
-		ingredients: ["Coffee", "2% Milk", "Chocolate Syrup", "Caramel Drizzle", "Whipped Cream"],
+		name: "Chocolate Strawberry Coffee",
+		ingredients: ["Coffee", "2% Milk", "Chocolate", "Strawberry", "Whipped Cream"],
 		price: 8
 	},
 	{
-		name: "Pumpkin Oat Cream Coffee",
-		ingredients: ["Coffee", "Oat Milk", "Pumpkin Syrup", "Whipped Cream"],
-		price: 7
-	},
-	{
-		name: "Strawberry Vanilla Oat Latte",
-		ingredients: ["Coffee", "Oat Milk", "Strawberry Syrup", "Vanilla Syrup", "Caramel Drizzle"],
-		price: 8
-	},
-	{
-		name: "Rainbow Mocha Supreme",
-		ingredients: ["Coffee", "Almond Milk", "Chocolate Syrup", "Whipped Cream", "Caramel Drizzle", "Rainbow Sprinkles"],
+		name: "Rainbow Chocolate Strawberry",
+		ingredients: ["Coffee", "Almond Milk", "Chocolate", "Whipped Cream", "Strawberry", "Rainbow Sprinkles"],
 		price: 10
 	}
 ];

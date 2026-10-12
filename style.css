@@ -353,11 +353,6 @@ nav ul {
     display: flex;
 }
 
-.allitems .ingredient-button.selected {
-    outline: 3px solid #ff829b;
-    outline-offset: 3px;
-}
-
 .allitems img:hover {
     transform: translateY(-5px);
 }

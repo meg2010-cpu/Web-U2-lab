@@ -1,5 +1,4 @@
 nav{
-   
     position: fixed;
     top: 0;
     left: 0;
@@ -164,6 +163,8 @@ nav ul {
     margin: 0 0 12px;
     color: #5a2d36;
     font-size: 36px;
+    align-content: center;
+    text-align: center;
 }
 
 .shop-message {
@@ -236,14 +237,18 @@ nav ul {
     .shopscreen {
         padding: 88px 12px 24px;
     }
-
     .shop-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
-
     .shop-item {
         min-height: 210px;
         padding: 12px 8px;
+    }
+    .sendbutton-container {
+        position: fixed;
+        top: 335px;
+        right: 110px;
+        z-index: 1000;
     }
 }

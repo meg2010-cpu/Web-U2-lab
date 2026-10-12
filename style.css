@@ -284,10 +284,5 @@ nav ul {
         min-height: 210px;
         padding: 12px 8px;
     }
-    .sendbutton-container {
-        position: fixed;
-        top: 335px;
-        right: 110px;
-        z-index: 1000;
-    }
+    
 }

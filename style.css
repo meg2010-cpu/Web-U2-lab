@@ -1,5 +1,4 @@
 nav{
-   
     position: fixed;
     top: 0;
     left: 0;
@@ -136,4 +135,11 @@ nav ul {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+.sendbutton-container {
+    position: fixed;
+    top: 335px;
+    right: 110px;
+    z-index: 1000;
 }

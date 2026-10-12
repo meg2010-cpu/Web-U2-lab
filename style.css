@@ -163,18 +163,19 @@ nav ul {
 }
 
 .ticket {
-    position: absolute;
-    top: 80px;
-    left: 75%;
-    width: 400px;
-    height: 250px;
+    position: fixed;
+    top: 4%;
+    right: 2.2%;
+    width: 17.6%;
+    height: 49.5%;
+    z-index: 900;
 }
 
 .ticket-text {
     position: absolute;
-    top: 30px;
-    left: 30px;
-    width: 340px;
+    top: 10%;
+    left: 7%;
+    width: 86%;
     text-align: center;
 }
 
@@ -190,7 +191,7 @@ nav ul {
 
 .sendbutton-container {
     position: absolute;
-    bottom: 20px;
+    bottom: 10%;
     left: 50%;
     transform: translateX(-50%);
 }

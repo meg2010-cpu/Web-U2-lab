@@ -157,5 +157,34 @@ window.addEventListener('storage', (event) => {
 	}
 });
 
+const timerDisplay = document.getElementById('timer');
+
+if (timerDisplay) {
+	const timerStorageKey = 'coffeeClickerTimerEnd';
+	let timerEnd = Number(localStorage.getItem(timerStorageKey));
+
+	if (!Number.isFinite(timerEnd) || timerEnd <= 0) {
+		timerEnd = Date.now() + 4 * 60 * 1000;
+		localStorage.setItem(timerStorageKey, String(timerEnd));
+	}
+
+	let timerInterval;
+
+	const updateTimer = () => {
+		const remainingSeconds = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
+		const minutes = Math.floor(remainingSeconds / 60);
+		const seconds = String(remainingSeconds % 60).padStart(2, '0');
+
+		timerDisplay.textContent = `${minutes}:${seconds}`;
+
+		if (remainingSeconds === 0) {
+			clearInterval(timerInterval);
+		}
+	};
+
+	updateTimer();
+	timerInterval = setInterval(updateTimer, 250);
+}
+
 
 

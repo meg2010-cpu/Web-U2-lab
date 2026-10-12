@@ -61,6 +61,23 @@ nav ul {
     background-attachment: fixed;
 }
 
+.timer {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    z-index: 1100;
+    transform: translateX(-50%);
+    min-width: 92px;
+    padding: 8px 14px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: #ff829b;
+    color: white;
+    font-size: 28px;
+    line-height: 1;
+    text-align: center;
+}
+
 #playbutton-container {
     width: auto;
     height: auto;

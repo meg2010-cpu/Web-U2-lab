@@ -247,6 +247,24 @@ nav ul {
     font-weight: 700;
 }
 
+.shop-message:not(:empty) {
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.shop-message-success {
+    background-color: #e4f3dc;
+    color: #315b2c;
+}
+
+.shop-message-error {
+    background-color: #ffe1e5;
+    color: #8a2635;
+}
+
 .shop-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -359,6 +377,11 @@ nav ul {
 
 .allitems .ingredient-button.unlocked {
     display: flex;
+}
+
+.allitems .ingredient-button.selected {
+    outline: 3px solid #ff829b;
+    outline-offset: 3px;
 }
 
 .allitems img:hover {

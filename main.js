@@ -3,6 +3,7 @@ let startingMoneyCents = 0;
 let moneyCents = Number(localStorage.getItem(moneyStorageKey));
 let moneyTestSeedKey = 'coffeeClickerZeroDollarTestSeeded';
 let ingredientStorageKey = 'coffeeClickerOwnedIngredients';
+let selectedIngredientStorageKey = 'coffeeClickerSelectedIngredients';
 let starterIngredients = ['machine', '2percent', 'vanilla'];
 let timerStorageKey = 'coffeeClickerTimerEnd';
 let shiftStartMoneyKey = 'coffeeClickerShiftStartMoneyCents';
@@ -221,7 +222,9 @@ recipesCompleted = Number(
     localStorage.getItem("coffeeClickerRecipesCompleted")
 ) || 0;
 
-newRecipe();
+if (recipeList) {
+	newRecipe();
+}
 
 
 if (localStorage.getItem(moneyTestSeedKey) !== 'true') {
@@ -258,7 +261,9 @@ document.querySelectorAll('.buy-button').forEach((button) => {
 
 		if (moneyCents < priceCents) {
 			if (shopMessage) {
-				shopMessage.textContent = 'Not enough money for this item.';
+				shopMessage.textContent = 'Not enough money. Come back after making more drinks!';
+				shopMessage.classList.add('shop-message-error');
+				shopMessage.classList.remove('shop-message-success');
 			}
 			return;
 		}
@@ -272,19 +277,36 @@ document.querySelectorAll('.buy-button').forEach((button) => {
 		}
 		updateMoneyDisplay();
 		if (shopMessage) {
-			shopMessage.textContent = `Purchased ${item.dataset.item}!`;
+			shopMessage.textContent = `You bought ${item.dataset.item}!`;
+			shopMessage.classList.add('shop-message-success');
+			shopMessage.classList.remove('shop-message-error');
 		}
 	});
 });
 
 document.querySelectorAll('.ingredient-button').forEach((button) => {
 	const isOwned = ownedIngredients.includes(button.dataset.ingredient);
+	let selectedIngredients;
+
+	try {
+		selectedIngredients = JSON.parse(localStorage.getItem(selectedIngredientStorageKey));
+	} catch {
+		selectedIngredients = null;
+	}
+
+	if (!Array.isArray(selectedIngredients)) {
+		selectedIngredients = [...starterIngredients];
+	}
+
 	button.classList.toggle('unlocked', isOwned);
-	button.classList.remove('selected');
+	button.classList.toggle('selected', selectedIngredients.includes(button.dataset.ingredient));
 
 	button.addEventListener('click', () => {
 		if (button.classList.contains('unlocked')) {
 			button.classList.toggle('selected');
+			let selectedIngredientIds = [...document.querySelectorAll('.ingredient-button.selected')]
+				.map((selectedButton) => selectedButton.dataset.ingredient);
+			localStorage.setItem(selectedIngredientStorageKey, JSON.stringify(selectedIngredientIds));
 		}
 	});
 });
@@ -301,9 +323,11 @@ const playLink = document.querySelector('#playbutton-container a');
 if (playLink) {
 	playLink.addEventListener('click', () => {
 		const newTimerEnd = Date.now() + 4 * 60 * 1000;
+		localStorage.setItem(moneyStorageKey, '0');
 		localStorage.setItem(timerStorageKey, String(newTimerEnd));
-		localStorage.setItem(shiftStartMoneyKey, String(Number(localStorage.getItem(moneyStorageKey)) || 0));
+		localStorage.setItem(shiftStartMoneyKey, '0');
 		localStorage.setItem(shiftPurchasesKey, '0');
+		localStorage.setItem(selectedIngredientStorageKey, JSON.stringify(starterIngredients));
 		localStorage.removeItem(shiftEarningsKey);
 
         localStorage.setItem("coffeeClickerRecipesCompleted", "0");
@@ -315,8 +339,8 @@ const timerDisplay = document.getElementById('timer');
 if (timerDisplay) {
 	let timerEnd = Number(localStorage.getItem(timerStorageKey));
 
-	if (!Number.isFinite(timerEnd) || timerEnd <= Date.now()) {
-        timerEnd = Date.now() + 4 * 60 * 1000;
+	if (!Number.isFinite(timerEnd) || timerEnd <= 0) {
+		timerEnd = Date.now() + 4 * 60 * 1000;
         localStorage.setItem(timerStorageKey, String(timerEnd));
         localStorage.setItem(shiftStartMoneyKey, String(moneyCents));
         localStorage.setItem(shiftPurchasesKey, '0');

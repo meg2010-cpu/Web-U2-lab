@@ -1,6 +1,10 @@
 let moneyStorageKey = 'coffeeClickerMoneyCents';
 let startingMoneyCents = 1000;
 let moneyCents = Number(localStorage.getItem(moneyStorageKey));
+let timerStorageKey = 'coffeeClickerTimerEnd';
+let shiftStartMoneyKey = 'coffeeClickerShiftStartMoneyCents';
+let shiftPurchasesKey = 'coffeeClickerShiftPurchasesCents';
+let shiftEarningsKey = 'coffeeClickerShiftEarningsCents';
 
 let ownedIngredients = ["Coffee", "2% Milk", "Vanilla Syrup"];
 let recipies = [
@@ -143,6 +147,10 @@ document.querySelectorAll('.buy-button').forEach((button) => {
 		}
 		moneyCents -= priceCents;
 		localStorage.setItem(moneyStorageKey, String(moneyCents));
+		if (Number(localStorage.getItem(timerStorageKey)) > Date.now()) {
+			let shiftPurchasesCents = Number(localStorage.getItem(shiftPurchasesKey)) || 0;
+			localStorage.setItem(shiftPurchasesKey, String(shiftPurchasesCents + priceCents));
+		}
 		updateMoneyDisplay();
 		if (shopMessage) {
 			shopMessage.textContent = `Purchased ${item.dataset.item}!`;
@@ -162,22 +170,55 @@ const playLink = document.querySelector('#playbutton-container a');
 if (playLink) {
 	playLink.addEventListener('click', () => {
 		const newTimerEnd = Date.now() + 4 * 60 * 1000;
-		localStorage.setItem('coffeeClickerTimerEnd', String(newTimerEnd));
+		localStorage.setItem(timerStorageKey, String(newTimerEnd));
+		localStorage.setItem(shiftStartMoneyKey, String(Number(localStorage.getItem(moneyStorageKey)) || 0));
+		localStorage.setItem(shiftPurchasesKey, '0');
+		localStorage.removeItem(shiftEarningsKey);
 	});
 }
 
 const timerDisplay = document.getElementById('timer');
 
 if (timerDisplay) {
-	const timerStorageKey = 'coffeeClickerTimerEnd';
 	let timerEnd = Number(localStorage.getItem(timerStorageKey));
 
 	if (!Number.isFinite(timerEnd) || timerEnd <= 0) {
 		timerEnd = Date.now() + 4 * 60 * 1000;
 		localStorage.setItem(timerStorageKey, String(timerEnd));
+		localStorage.setItem(shiftStartMoneyKey, String(moneyCents));
+		localStorage.setItem(shiftPurchasesKey, '0');
+		localStorage.removeItem(shiftEarningsKey);
 	}
 
+	const gameOverPopup = document.getElementById('gameOverPopup');
+	const gameOverOverlay = document.getElementById('gameOverOverlay');
+	const gameOverClose = document.getElementById('gameOverClose');
+	const shiftEarningsDisplay = document.getElementById('shiftEarnings');
 	let timerInterval;
+	let gameOverShown = false;
+
+	const showGameOver = () => {
+		if (gameOverShown || !gameOverPopup || !gameOverOverlay) {
+			return;
+		}
+
+		gameOverShown = true;
+		let earnedCents = Number(localStorage.getItem(shiftEarningsKey));
+
+		if (!Number.isInteger(earnedCents) || earnedCents < 0) {
+			let startingBalance = Number(localStorage.getItem(shiftStartMoneyKey)) || 0;
+			let shiftPurchasesCents = Number(localStorage.getItem(shiftPurchasesKey)) || 0;
+			earnedCents = Math.max(0, moneyCents + shiftPurchasesCents - startingBalance);
+			localStorage.setItem(shiftEarningsKey, String(earnedCents));
+		}
+
+		if (shiftEarningsDisplay) {
+			shiftEarningsDisplay.textContent = `$${(earnedCents / 100).toFixed(2)}`;
+		}
+
+		gameOverPopup.hidden = false;
+		gameOverOverlay.hidden = false;
+	};
 
 	const updateTimer = () => {
 		const remainingSeconds = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
@@ -187,12 +228,23 @@ if (timerDisplay) {
 		timerDisplay.textContent = `${minutes}:${seconds}`;
 
 		if (remainingSeconds === 0) {
-			clearInterval(timerInterval);
+			if (timerInterval) {
+				clearInterval(timerInterval);
+			}
+			showGameOver();
 		}
 	};
 
 	updateTimer();
-	timerInterval = setInterval(updateTimer, 250);
+	if (timerEnd > Date.now()) {
+		timerInterval = setInterval(updateTimer, 250);
+	}
+
+	if (gameOverClose) {
+		gameOverClose.addEventListener('click', () => {
+			window.location.href = 'start.html';
+		});
+	}
 }
 
 

@@ -154,6 +154,14 @@ nav ul {
     z-index: 999;
 }
 
+.game-over-overlay {
+    z-index: 1200;
+}
+
+.game-over-popup {
+    z-index: 1201;
+}
+
 .ticket {
     position: absolute;
     top: 80px;

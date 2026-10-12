@@ -2,6 +2,20 @@ let moneyStorageKey = 'coffeeClickerMoneyCents';
 let startingMoneyCents = 1000;
 let moneyCents = Number(localStorage.getItem(moneyStorageKey));
 
+let ownedIngredients = ["Coffee", "2% Milk", "Vanilla Syrup"];
+let recipies = [
+    {
+        name: "Coffee with 2& Milk",
+        ingredients: ["Coffee", "2% Milk"],
+        price: 5
+    },
+    {
+        name: "Vanilla Coffee with Milk",
+        ingredients: ["Coffee", "2% Milk", "Vanilla Syrup"],
+        price: 5
+    }
+];
+
 if (!Number.isInteger(moneyCents) || moneyCents < 0) {
 	moneyCents = startingMoneyCents;
 	localStorage.setItem(moneyStorageKey, String(moneyCents));
@@ -42,3 +56,6 @@ window.addEventListener('storage', (event) => {
 		updateMoneyDisplay();
 	}
 });
+
+
+

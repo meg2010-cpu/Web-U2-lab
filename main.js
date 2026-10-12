@@ -109,35 +109,120 @@ let recipies = [
 	}
 ];
 
-let recipeNameDisplay = document.getElementById('recipe-name');
-let recipeItemsDisplay = document.getElementById('recipe-items');
-let sendOrderButton = document.getElementById('sendbutton');
+let ingredientNames = {
+    machine: "Coffee",
+    "2percent": "2% Milk",
+    oat: "Oat Milk",
+    almond: "Almond Milk",
+    chocolate: "Chocolate",
+    strawberry: "Strawberry",
+    pumpkin: "Pumpkin Syrup",
+    vanilla: "Vanilla Syrup",
+    rainbow: "Rainbow Sprinkles",
+    choco: "Chocolate",
+    sprinkles: "Rainbow Sprinkles",
+    cinnamon: "Cinnamon",
+    cream: "Whipped Cream",
+    frappe: "Frappe",
+    latte: "Latte"
+};
 
-if (recipeNameDisplay && recipeItemsDisplay && sendOrderButton && recipies.length > 0) {
-	let currentRecipeIndex = -1;
+let currentRecipe;
+let completedIngredients = [];
+let recipesCompleted = 0;
 
-	let showRandomRecipe = () => {
-		let nextRecipeIndex = Math.floor(Math.random() * recipies.length);
+let recipeList = document.getElementById("recipe-items");
+let sendButton = document.getElementById("sendbutton");
 
-		while (recipies.length > 1 && nextRecipeIndex === currentRecipeIndex) {
-			nextRecipeIndex = Math.floor(Math.random() * recipies.length);
-		}
+function getAvailableRecipes() {
+    let ownedNames = ownedIngredients.map(item => ingredientNames[item] || item);
 
-		currentRecipeIndex = nextRecipeIndex;
-		let recipe = recipies[currentRecipeIndex];
-		recipeNameDisplay.textContent = recipe.name;
-		recipeItemsDisplay.replaceChildren();
-
-		recipe.ingredients.forEach((ingredient) => {
-			let ingredientItem = document.createElement('li');
-			ingredientItem.textContent = ingredient;
-			recipeItemsDisplay.appendChild(ingredientItem);
-		});
-	};
-
-	showRandomRecipe();
-	sendOrderButton.addEventListener('click', showRandomRecipe);
+    return recipies.filter(recipe =>
+        recipe.ingredients.every(ingredient => ownedNames.includes(ingredient))
+    );
 }
+
+function newRecipe() {
+    let availableRecipes = getAvailableRecipes();
+
+    if (availableRecipes.length === 0) {
+        recipeList.innerHTML = "<li>Buy more ingredients!</li>";
+        currentRecipe = null;
+        return;
+    }
+
+    currentRecipe = availableRecipes[
+        Math.floor(Math.random() * availableRecipes.length)
+    ];
+
+    completedIngredients = [];
+    recipeList.innerHTML = "";
+
+    currentRecipe.ingredients.forEach(ingredient => {
+        let listItem = document.createElement("li");
+        listItem.textContent = ingredient;
+        listItem.dataset.ingredient = ingredient;
+        recipeList.appendChild(listItem);
+    });
+}
+
+function updateRecipeList() {
+    document.querySelectorAll("#recipe-items li").forEach(item => {
+        if (completedIngredients.includes(item.dataset.ingredient)) {
+            item.style.color = "green";
+        }
+    });
+}
+
+document.querySelectorAll(".ingredient-button").forEach(button => {
+    button.addEventListener("click", () => {
+        if (!currentRecipe || !button.classList.contains("unlocked")) {
+            return;
+        }
+
+        let ingredient = ingredientNames[button.dataset.ingredient];
+
+        if (
+            currentRecipe.ingredients.includes(ingredient) &&
+            !completedIngredients.includes(ingredient)
+        ) {
+            completedIngredients.push(ingredient);
+            updateRecipeList();
+        }
+    });
+});
+
+if (sendButton) {
+    sendButton.addEventListener("click", () => {
+        if (!currentRecipe) {
+            return;
+        }
+
+        if (completedIngredients.length !== currentRecipe.ingredients.length) {
+            return;
+        }
+
+        let earnedCents = currentRecipe.price * 100;
+        moneyCents += earnedCents;
+        recipesCompleted++;
+
+        localStorage.setItem(moneyStorageKey, String(moneyCents));
+        localStorage.setItem(shiftEarningsKey, String(
+            (Number(localStorage.getItem(shiftEarningsKey)) || 0) + earnedCents
+        ));
+        localStorage.setItem("coffeeClickerRecipesCompleted", String(recipesCompleted));
+
+        updateMoneyDisplay();
+        newRecipe();
+    });
+}
+
+recipesCompleted = Number(
+    localStorage.getItem("coffeeClickerRecipesCompleted")
+) || 0;
+
+newRecipe();
+
 
 if (localStorage.getItem(moneyTestSeedKey) !== 'true') {
 	moneyCents = startingMoneyCents;
@@ -220,6 +305,8 @@ if (playLink) {
 		localStorage.setItem(shiftStartMoneyKey, String(Number(localStorage.getItem(moneyStorageKey)) || 0));
 		localStorage.setItem(shiftPurchasesKey, '0');
 		localStorage.removeItem(shiftEarningsKey);
+
+        localStorage.setItem("coffeeClickerRecipesCompleted", "0");
 	});
 }
 
@@ -228,13 +315,13 @@ const timerDisplay = document.getElementById('timer');
 if (timerDisplay) {
 	let timerEnd = Number(localStorage.getItem(timerStorageKey));
 
-	if (!Number.isFinite(timerEnd) || timerEnd <= 0) {
-		timerEnd = Date.now() + 4 * 60 * 1000;
-		localStorage.setItem(timerStorageKey, String(timerEnd));
-		localStorage.setItem(shiftStartMoneyKey, String(moneyCents));
-		localStorage.setItem(shiftPurchasesKey, '0');
-		localStorage.removeItem(shiftEarningsKey);
-	}
+	if (!Number.isFinite(timerEnd) || timerEnd <= Date.now()) {
+        timerEnd = Date.now() + 4 * 60 * 1000;
+        localStorage.setItem(timerStorageKey, String(timerEnd));
+        localStorage.setItem(shiftStartMoneyKey, String(moneyCents));
+        localStorage.setItem(shiftPurchasesKey, '0');
+        localStorage.removeItem(shiftEarningsKey);
+    }
 
 	const gameOverPopup = document.getElementById('gameOverPopup');
 	const gameOverOverlay = document.getElementById('gameOverOverlay');
@@ -257,7 +344,12 @@ if (timerDisplay) {
 			earnedCents = Math.max(0, moneyCents + shiftPurchasesCents - startingBalance);
 			localStorage.setItem(shiftEarningsKey, String(earnedCents));
 		}
+        let recipesCompletedDisplay = document.getElementById("recipesCompleted");
 
+        if (recipesCompletedDisplay) {
+            recipesCompletedDisplay.textContent =
+                localStorage.getItem("coffeeClickerRecipesCompleted") || 0;
+        }
 		if (shiftEarningsDisplay) {
 			shiftEarningsDisplay.textContent = `$${(earnedCents / 100).toFixed(2)}`;
 		}

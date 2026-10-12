@@ -3,7 +3,6 @@ let startingMoneyCents = 0;
 let moneyCents = Number(localStorage.getItem(moneyStorageKey));
 let moneyTestSeedKey = 'coffeeClickerZeroDollarTestSeeded';
 let ingredientStorageKey = 'coffeeClickerOwnedIngredients';
-let selectedIngredientStorageKey = 'coffeeClickerSelectedIngredients';
 let starterIngredients = ['machine', '2percent', 'vanilla'];
 let timerStorageKey = 'coffeeClickerTimerEnd';
 let shiftStartMoneyKey = 'coffeeClickerShiftStartMoneyCents';
@@ -156,6 +155,8 @@ function newRecipe() {
         Math.floor(Math.random() * availableRecipes.length)
     ];
 
+    document.getElementById("recipe-name").textContent = currentRecipe.name;
+    
     completedIngredients = [];
     recipeList.innerHTML = "";
 
@@ -284,32 +285,14 @@ document.querySelectorAll('.buy-button').forEach((button) => {
 	});
 });
 
+
 document.querySelectorAll('.ingredient-button').forEach((button) => {
-	const isOwned = ownedIngredients.includes(button.dataset.ingredient);
-	let selectedIngredients;
+    const isOwned = ownedIngredients.includes(button.dataset.ingredient);
 
-	try {
-		selectedIngredients = JSON.parse(localStorage.getItem(selectedIngredientStorageKey));
-	} catch {
-		selectedIngredients = null;
-	}
-
-	if (!Array.isArray(selectedIngredients)) {
-		selectedIngredients = [...starterIngredients];
-	}
-
-	button.classList.toggle('unlocked', isOwned);
-	button.classList.toggle('selected', selectedIngredients.includes(button.dataset.ingredient));
-
-	button.addEventListener('click', () => {
-		if (button.classList.contains('unlocked')) {
-			button.classList.toggle('selected');
-			let selectedIngredientIds = [...document.querySelectorAll('.ingredient-button.selected')]
-				.map((selectedButton) => selectedButton.dataset.ingredient);
-			localStorage.setItem(selectedIngredientStorageKey, JSON.stringify(selectedIngredientIds));
-		}
-	});
+    button.classList.toggle('unlocked', isOwned);
+    button.classList.remove('selected');
 });
+
 
 window.addEventListener('storage', (event) => {
 	if (event.key === moneyStorageKey && event.newValue !== null) {
@@ -320,19 +303,28 @@ window.addEventListener('storage', (event) => {
 
 const playLink = document.querySelector('#playbutton-container a');
 
-if (playLink) {
-	playLink.addEventListener('click', () => {
-		const newTimerEnd = Date.now() + 4 * 60 * 1000;
-		localStorage.setItem(moneyStorageKey, '0');
-		localStorage.setItem(timerStorageKey, String(newTimerEnd));
-		localStorage.setItem(shiftStartMoneyKey, '0');
-		localStorage.setItem(shiftPurchasesKey, '0');
-		localStorage.setItem(selectedIngredientStorageKey, JSON.stringify(starterIngredients));
-		localStorage.removeItem(shiftEarningsKey);
 
+if (playLink) {
+    playLink.addEventListener('click', () => {
+        const newTimerEnd = Date.now() + 4 * 60 * 1000;
+
+        // reset money
+        moneyCents = 0;
+        localStorage.setItem(moneyStorageKey, '0');
+
+        // reset owned ingredients
+        ownedIngredients = [...starterIngredients];
+        localStorage.setItem(ingredientStorageKey, JSON.stringify(starterIngredients));
+
+        // reset shift
+        localStorage.setItem(timerStorageKey, String(newTimerEnd));
+        localStorage.setItem(shiftStartMoneyKey, '0');
+        localStorage.setItem(shiftPurchasesKey, '0');
+        localStorage.removeItem(shiftEarningsKey);
         localStorage.setItem("coffeeClickerRecipesCompleted", "0");
-	});
+    });
 }
+
 
 const timerDisplay = document.getElementById('timer');
 

@@ -50,13 +50,6 @@
     });
 
     closeButton.addEventListener('click', closePopup);
-    overlay.addEventListener('click', closePopup);
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !popup.hidden) {
-            closePopup();
-        }
-    });
 </script>
 
 </body>

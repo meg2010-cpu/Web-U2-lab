@@ -15,10 +15,12 @@ nav ul {
   align-items: center;
   gap: 10px;
 }
+
 #moneyAmount{
     color: white;
     margin-right: 15px;
 }
+
 #shoplogo{
     width: 80px;
     margin: 0px 20px 0px 20px;
@@ -38,7 +40,8 @@ nav ul {
     font-style: normal;
 }
 
-.background{
+.background {
+    min-height: 100vh;
     background-image: url("startscreen.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -50,42 +53,82 @@ nav ul {
     justify-content: center;
     align-items: center;
 }
-.gamescreen{
+
+.gamescreen {
     background-image: url("gamepage.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
-#playbutton-container{
+
+#playbutton-container {
     width: auto;
     height: auto;
 }
-#buttoncontainer{
+
+#buttoncontainer {
     display: flex;
     align-items: center;
     margin-top: 600px;
     gap: 80px;
 }
-/* instuctions popup */
+
+#instructionsBtn {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    line-height: 0;
+    cursor: pointer;
+}
+
+#instructionsBtn img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+}
+
 .popup-box {
-    display: none;
+    display: block;
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); 
-    padding: 20px;
+    transform: translate(-50%, -50%);
+    width: min(420px, calc(100vw - 48px));
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 32px 24px 24px;
     background: white;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
 
-.popup-box.active {
-    display: block;
-}
-.overlay {
+.popup-box[hidden],
+.overlay[hidden] {
     display: none;
+}
+
+.popup-box h2 {
+    margin-top: 0;
+}
+
+.popup-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: 0;
+    background: transparent;
+    color: #333;
+    cursor: pointer;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.overlay {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -93,11 +136,8 @@ nav ul {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
-    }
-
-.overlay.active {
-    display: block;
 }
-#instructionsBtn {
-    cursor: pointer;
+
+.popup-content {
+    white-space: pre-wrap;
 }

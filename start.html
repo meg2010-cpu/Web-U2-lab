@@ -13,7 +13,9 @@
 
      <div id = "buttoncontainer">
         <div id="instructionbutton-container">
-            <img src="instructionbutton.png" alt="instructionbutton" id="instructionsBtn" height="155px" width="auto">
+            <button id="instructionsBtn" class="instructions-trigger" type="button" aria-label="Open instructions">
+                <img src="instructionbutton.png" alt="" height="155">
+            </button>
         </div>
         
         <div id="playbutton-container">
@@ -21,15 +23,44 @@
         </div>
     </div>
 
-   <div id="overlay" class="overlay"></div>
+   <div id="overlay" class="overlay" hidden></div>
+    <section id="popup" class="popup-box" hidden>
+        <button id="closeBtn" class="popup-close" type="button">&times;</button>
+        <h2 id="popupTitle">Instructions</h2>
+        <div class="popup-content">
+            <p>Welcome to CoffeeClicker!</p>
+            <p>Add your instructions here.</p>
+        </div>
+    </section>
 
-    <div id="popup" class="popup-box">
-        <h2>Instructions</h2>
-        <p>Welcome to CoffeeClicker!</p>
-        <button id="closeBtn">Close</button>
-    </div>
+<script src="main.js" defer></script>
+<script>
+    let instructionsButton = document.getElementById('instructionsBtn');
+    let closeButton = document.getElementById('closeBtn');
+    let popup = document.getElementById('popup');
+    let overlay = document.getElementById('overlay');
 
-<script src="main.js" ></script>
+    let closePopup = () => {
+        popup.hidden = true;
+        overlay.hidden = true;
+        instructionsButton.focus();
+    };
+
+    instructionsButton.addEventListener('click', () => {
+        popup.hidden = false;
+        overlay.hidden = false;
+        closeButton.focus();
+    });
+
+    closeButton.addEventListener('click', closePopup);
+    overlay.addEventListener('click', closePopup);
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !popup.hidden) {
+            closePopup();
+        }
+    });
+</script>
 
 </body>
 

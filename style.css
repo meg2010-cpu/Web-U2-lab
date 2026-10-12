@@ -197,9 +197,17 @@ nav ul {
 }
 
 #sendbutton {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+#sendbutton img {
+    display: block;
     height: 50px;
     width: auto;
-    display: block;
 }
 
 .shopscreen {

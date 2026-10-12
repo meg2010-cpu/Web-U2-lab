@@ -109,6 +109,36 @@ let recipies = [
 	}
 ];
 
+let recipeNameDisplay = document.getElementById('recipe-name');
+let recipeItemsDisplay = document.getElementById('recipe-items');
+let sendOrderButton = document.getElementById('sendbutton');
+
+if (recipeNameDisplay && recipeItemsDisplay && sendOrderButton && recipies.length > 0) {
+	let currentRecipeIndex = -1;
+
+	let showRandomRecipe = () => {
+		let nextRecipeIndex = Math.floor(Math.random() * recipies.length);
+
+		while (recipies.length > 1 && nextRecipeIndex === currentRecipeIndex) {
+			nextRecipeIndex = Math.floor(Math.random() * recipies.length);
+		}
+
+		currentRecipeIndex = nextRecipeIndex;
+		let recipe = recipies[currentRecipeIndex];
+		recipeNameDisplay.textContent = recipe.name;
+		recipeItemsDisplay.replaceChildren();
+
+		recipe.ingredients.forEach((ingredient) => {
+			let ingredientItem = document.createElement('li');
+			ingredientItem.textContent = ingredient;
+			recipeItemsDisplay.appendChild(ingredientItem);
+		});
+	};
+
+	showRandomRecipe();
+	sendOrderButton.addEventListener('click', showRandomRecipe);
+}
+
 if (localStorage.getItem(moneyTestSeedKey) !== 'true') {
 	moneyCents = startingMoneyCents;
 	localStorage.setItem(moneyStorageKey, String(moneyCents));

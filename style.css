@@ -286,3 +286,28 @@ nav ul {
     }
     
 }
+.allitems img{
+    cursor: pointer;
+}
+
+.allitems {
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    margin-bottom: 5px;
+}
+
+.rightside {
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+}
+
+#leftside {
+    position: absolute;
+    left: 10%;
+    bottom: 0;
+}
+

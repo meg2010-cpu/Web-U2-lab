@@ -157,6 +157,15 @@ window.addEventListener('storage', (event) => {
 	}
 });
 
+const playLink = document.querySelector('#playbutton-container a');
+
+if (playLink) {
+	playLink.addEventListener('click', () => {
+		const newTimerEnd = Date.now() + 4 * 60 * 1000;
+		localStorage.setItem('coffeeClickerTimerEnd', String(newTimerEnd));
+	});
+}
+
 const timerDisplay = document.getElementById('timer');
 
 if (timerDisplay) {

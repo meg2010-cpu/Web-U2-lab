@@ -1,12 +1,26 @@
 let moneyStorageKey = 'coffeeClickerMoneyCents';
-let startingMoneyCents = 1000;
+let startingMoneyCents = 0;
 let moneyCents = Number(localStorage.getItem(moneyStorageKey));
+let moneyTestSeedKey = 'coffeeClickerZeroDollarTestSeeded';
+let ingredientStorageKey = 'coffeeClickerOwnedIngredients';
+let starterIngredients = ['machine', '2percent', 'vanilla'];
 let timerStorageKey = 'coffeeClickerTimerEnd';
 let shiftStartMoneyKey = 'coffeeClickerShiftStartMoneyCents';
 let shiftPurchasesKey = 'coffeeClickerShiftPurchasesCents';
 let shiftEarningsKey = 'coffeeClickerShiftEarningsCents';
 
-let ownedIngredients = ["Coffee", "2% Milk", "Vanilla Syrup"];
+let ownedIngredients;
+
+try {
+	let savedIngredients = JSON.parse(localStorage.getItem(ingredientStorageKey));
+	ownedIngredients = Array.isArray(savedIngredients) ? savedIngredients : [...starterIngredients];
+} catch {
+	ownedIngredients = [...starterIngredients];
+}
+
+ownedIngredients = [...new Set([...starterIngredients, ...ownedIngredients])];
+localStorage.setItem(ingredientStorageKey, JSON.stringify(ownedIngredients));
+
 let recipies = [
 	{
 		name: "Classic 2% Coffee",
@@ -95,7 +109,11 @@ let recipies = [
 	}
 ];
 
-if (!Number.isInteger(moneyCents) || moneyCents < 0) {
+if (localStorage.getItem(moneyTestSeedKey) !== 'true') {
+	moneyCents = startingMoneyCents;
+	localStorage.setItem(moneyStorageKey, String(moneyCents));
+	localStorage.setItem(moneyTestSeedKey, 'true');
+} else if (!Number.isInteger(moneyCents) || moneyCents < 0) {
 	moneyCents = startingMoneyCents;
 	localStorage.setItem(moneyStorageKey, String(moneyCents));
 }
@@ -113,7 +131,16 @@ updateMoneyDisplay();
 document.querySelectorAll('.buy-button').forEach((button) => {
 	button.addEventListener('click', () => {
 		const item = button.closest('.shop-item');
+		const itemName = item.dataset.item;
 		const priceCents = Number(item.dataset.priceCents);
+
+		if (ownedIngredients.includes(itemName)) {
+			if (shopMessage) {
+				shopMessage.textContent = 'You already own this item.';
+			}
+			return;
+		}
+
 		if (moneyCents < priceCents) {
 			if (shopMessage) {
 				shopMessage.textContent = 'Not enough money for this item.';
@@ -121,6 +148,8 @@ document.querySelectorAll('.buy-button').forEach((button) => {
 			return;
 		}
 		moneyCents -= priceCents;
+		ownedIngredients.push(itemName);
+		localStorage.setItem(ingredientStorageKey, JSON.stringify(ownedIngredients));
 		localStorage.setItem(moneyStorageKey, String(moneyCents));
 		if (Number(localStorage.getItem(timerStorageKey)) > Date.now()) {
 			let shiftPurchasesCents = Number(localStorage.getItem(shiftPurchasesKey)) || 0;
@@ -129,6 +158,18 @@ document.querySelectorAll('.buy-button').forEach((button) => {
 		updateMoneyDisplay();
 		if (shopMessage) {
 			shopMessage.textContent = `Purchased ${item.dataset.item}!`;
+		}
+	});
+});
+
+document.querySelectorAll('.ingredient-button').forEach((button) => {
+	const isOwned = ownedIngredients.includes(button.dataset.ingredient);
+	button.classList.toggle('unlocked', isOwned);
+	button.classList.remove('selected');
+
+	button.addEventListener('click', () => {
+		if (button.classList.contains('unlocked')) {
+			button.classList.toggle('selected');
 		}
 	});
 });

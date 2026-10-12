@@ -338,6 +338,26 @@ nav ul {
     image-rendering: pixelated;
 }
 
+.allitems .ingredient-button {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.allitems .ingredient-button.unlocked {
+    display: flex;
+}
+
+.allitems .ingredient-button.selected {
+    outline: 3px solid #ff829b;
+    outline-offset: 3px;
+}
+
 .allitems img:hover {
     transform: translateY(-5px);
 }

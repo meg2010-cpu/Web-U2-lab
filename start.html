@@ -23,35 +23,32 @@
         </div>
     </div>
 
-   <div id="overlay" class="overlay" hidden></div>
+    <div id="overlay" class="overlay" hidden></div>
     <section id="popup" class="popup-box" hidden>
         <button id="closeBtn" class="popup-close" type="button">&times;</button>
         <h2 id="popupTitle">Instructions</h2>
         <p>blahblahblah</p>
     </section>
 
-<script src="main.js" defer></script>
-<script>
-    let instructionsButton = document.getElementById('instructionsBtn');
-    let closeButton = document.getElementById('closeBtn');
-    let popup = document.getElementById('popup');
-    let overlay = document.getElementById('overlay');
+    <script src="main.js" defer></script>
+    <script>
+        let instructionsButton = document.getElementById('instructionsBtn');
+        let closeButton = document.getElementById('closeBtn');
+        let popup = document.getElementById('popup');
+        let overlay = document.getElementById('overlay');
 
-    let closePopup = () => {
-        popup.hidden = true;
-        overlay.hidden = true;
-        instructionsButton.focus();
-    };
+        let closePopup = () => {
+            popup.hidden = true;
+            overlay.hidden = true;
+            instructionsButton.focus();
+        };
 
-    instructionsButton.addEventListener('click', () => {
-        popup.hidden = false;
-        overlay.hidden = false;
-        closeButton.focus();
-    });
-
-    closeButton.addEventListener('click', closePopup);
-</script>
-
+        instructionsButton.addEventListener('click', () => {
+            popup.hidden = false;
+            overlay.hidden = false;
+            closeButton.focus();
+        });
+        closeButton.addEventListener('click', closePopup);
+    </script>
 </body>
-
 </html>

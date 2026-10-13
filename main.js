@@ -8,7 +8,7 @@ let timerStorageKey = 'coffeeClickerTimerEnd';
 let shiftStartMoneyKey = 'coffeeClickerShiftStartMoneyCents';
 let shiftPurchasesKey = 'coffeeClickerShiftPurchasesCents';
 let shiftEarningsKey = 'coffeeClickerShiftEarningsCents';
-
+ 
 let ownedIngredients;
 
 try {

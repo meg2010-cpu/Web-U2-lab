@@ -293,15 +293,13 @@ margin-bottom: 0;
     margin: 0 0 12px;
     color: #5a2d36;
     font-weight: 700;
-}
-
-.shop-message:not(:empty) {
-    width: fit-content;
+     width: fit-content;
     margin-right: auto;
     margin-left: auto;
     padding: 8px 12px;
     border-radius: 4px;
 }
+
 
 .shop-message-success {
     background-color: #e4f3dc;
@@ -367,10 +365,6 @@ margin-bottom: 0;
     font-size: 18px;
 }
 
-.buy-button:focus-visible {
-    outline: 3px solid #5a2d36;
-    outline-offset: 3px;
-}
 
 @media (max-width: 600px) {
     .shopscreen {

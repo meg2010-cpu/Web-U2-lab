@@ -27,8 +27,6 @@ nav ul {
 
 #moneylogo{
     width: 90px;
-    margin-bottom: 0;
-    padding-bottom: 0;
     margin: 0px 0px 0px 10px;
 }
 
@@ -74,11 +72,10 @@ nav ul {
     background-color: #ff829b;
     color: white;
     font-size: 28px;
-    line-height: 1;
     text-align: center;
 }
 
-#playbutton-container {
+#playbuttoncontainer {
     width: auto;
     height: auto;
 }
@@ -101,7 +98,6 @@ nav ul {
 
 #instructionsBtn img {
     display: block;
-    width: auto;
     max-width: 100%;
 }
 
@@ -298,17 +294,6 @@ margin-bottom: 0;
     margin-left: auto;
     padding: 8px 12px;
     border-radius: 4px;
-}
-
-
-.shop-message-success {
-    background-color: #e4f3dc;
-    color: #315b2c;
-}
-
-.shop-message-error {
-    background-color: #ffe1e5;
-    color: #8a2635;
 }
 
 .shop-grid {

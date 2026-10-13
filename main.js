@@ -1,406 +1,334 @@
-let moneyStorageKey = 'coffeeClickerMoneyCents';
-let startingMoneyCents = 0;
-let moneyCents = Number(localStorage.getItem(moneyStorageKey));
-let moneyTestSeedKey = 'coffeeClickerZeroDollarTestSeeded';
-let ingredientStorageKey = 'coffeeClickerOwnedIngredients';
-let starterIngredients = ['machine', '2percent', 'vanilla'];
-let timerStorageKey = 'coffeeClickerTimerEnd';
-let shiftStartMoneyKey = 'coffeeClickerShiftStartMoneyCents';
-let shiftPurchasesKey = 'coffeeClickerShiftPurchasesCents';
-let shiftEarningsKey = 'coffeeClickerShiftEarningsCents';
- 
-let ownedIngredients;
+let moneyKey = 'money';
+let ownedKey = 'owned';
+let timerKey = 'timerEnd';
+let earnedKey = 'earned';
+let madeKey = 'made';
 
-try {
-	let savedIngredients = JSON.parse(localStorage.getItem(ingredientStorageKey));
-	if (Array.isArray(savedIngredients)) {
-		ownedIngredients = savedIngredients;
-	} else {
-		ownedIngredients = [...starterIngredients];
+function load(key, backup) {
+	let value = localStorage.getItem(key);
+	if (value === null) {
+		return backup;
 	}
-} catch {
-	ownedIngredients = [...starterIngredients];
+	try {
+		return JSON.parse(value);
+	} catch {
+		return backup;
+	}
 }
 
-ownedIngredients = [...new Set([...starterIngredients, ...ownedIngredients])];
-localStorage.setItem(ingredientStorageKey, JSON.stringify(ownedIngredients));
+function save(key, value) {
+	localStorage.setItem(key, JSON.stringify(value));
+}
 
-let recipies = [
-	{
-		name: "Classic 2% Coffee",
-		ingredients: ["Coffee", "2% Milk"],
-		price: 5
-	},
-	{
-		name: "Classic Oat Coffee",
-		ingredients: ["Coffee", "Oat Milk"],
-		price: 5
-	},
-	{
-		name: "Classic Almond Coffee",
-		ingredients: ["Coffee", "Almond Milk"],
-		price: 5
-	},
-	{
-		name: "Vanilla 2% Coffee",
-		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup"],
-		price: 6
-	},
-	{
-		name: "Chocolate Mocha",
-		ingredients: ["Coffee", "2% Milk", "Chocolate"],
-		price: 6
-	},
-	{
-		name: "Vanilla Mocha",
-		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup", "Chocolate"],
-		price: 7
-	},
-	{
-		name: "Pumpkin Spice Coffee",
-		ingredients: ["Coffee", "2% Milk", "Pumpkin Syrup", "Cinnamon"],
-		price: 7
-	},
-	{
-		name: "Oat Milk Vanilla Coffee",
-		ingredients: ["Coffee", "Oat Milk", "Vanilla Syrup"],
-		price: 6
-	},
-	{
-		name: "Cinnamon Oat Coffee",
-		ingredients: ["Coffee", "Oat Milk", "Cinnamon"],
-		price: 6
-	},
-	{
-		name: "Almond Vanilla Coffee",
-		ingredients: ["Coffee", "Almond Milk", "Vanilla Syrup"],
-		price: 6
-	},
-	{
-		name: "Almond Chocolate Coffee",
-		ingredients: ["Coffee", "Almond Milk", "Chocolate"],
-		price: 6
-	},
-	{
-		name: "Strawberry Almond Latte",
-		ingredients: ["Coffee", "Almond Milk", "Strawberry"],
-		price: 6
-	},
-	{
-		name: "Strawberry Cream Coffee",
-		ingredients: ["Coffee", "2% Milk", "Strawberry", "Whipped Cream"],
-		price: 7
-	},
-	{
-		name: "Rainbow Vanilla Latte",
-		ingredients: ["Coffee", "2% Milk", "Vanilla Syrup", "Whipped Cream", "Rainbow Sprinkles"],
-		price: 8
-	},
-	{
-		name: "Cinnamon Cream Coffee",
-		ingredients: ["Coffee", "2% Milk", "Cinnamon", "Whipped Cream"],
-		price: 7
-	},
-	{
-		name: "Chocolate Strawberry Coffee",
-		ingredients: ["Coffee", "2% Milk", "Chocolate", "Strawberry", "Whipped Cream"],
-		price: 8
-	},
-	{
-		name: "Rainbow Chocolate Strawberry",
-		ingredients: ["Coffee", "Almond Milk", "Chocolate", "Whipped Cream", "Strawberry", "Rainbow Sprinkles"],
-		price: 10
+function formatMoney(cents) {
+	return '$' + (cents / 100).toFixed(2);
+}
+
+let starters = ['machine', '2percent', 'vanilla'];
+let shiftLength = 4 * 60 * 1000;
+
+let money = load(moneyKey, 0);
+if (!Number.isInteger(money) || money < 0) {
+	money = 0;
+}
+
+let owned = load(ownedKey, []);
+if (!Array.isArray(owned)) {
+	owned = [];
+}
+for (let item of starters) {
+	if (!owned.includes(item)) {
+		owned.push(item);
 	}
+}
+save(ownedKey, owned);
+
+let made = load(madeKey, 0);
+
+let recipes = [
+	{
+		name: 'Classic 2% Coffee', 
+		ingredients: ['Coffee', '2% Milk'], 
+		price: 5 },
+	{ 
+		name: 'Classic Oat Coffee', 
+		ingredients: ['Coffee', 'Oat Milk'], 
+		price: 5 },
+	{ 
+		name: 'Classic Almond Coffee', 
+		ingredients: ['Coffee', 'Almond Milk'], 
+		price: 5 },
+	{ 
+		name: 'Vanilla 2% Coffee', 
+		ingredients: ['Coffee', '2% Milk', 'Vanilla Syrup'], 
+		price: 6 },
+	{ 
+		name: 'Chocolate Mocha', 
+		ingredients: ['Coffee', '2% Milk', 'Chocolate'], 
+		price: 6 },
+	{ 
+		name: 'Vanilla Mocha', 
+		ingredients: ['Coffee', '2% Milk', 'Vanilla Syrup', 'Chocolate'], 
+		price: 7 },
+	{ 
+		name: 'Pumpkin Spice Coffee', 
+		ingredients: ['Coffee', '2% Milk', 'Pumpkin Syrup', 'Cinnamon'], 
+		price: 7 },
+	{ 
+		name: 'Oat Milk Vanilla Coffee', 
+		ingredients: ['Coffee', 'Oat Milk', 'Vanilla Syrup'], 
+		price: 6 },
+	{ 
+		name: 'Cinnamon Oat Coffee', 
+		ingredients: ['Coffee', 'Oat Milk', 'Cinnamon'], 
+		price: 6 },
+	{ 
+		name: 'Almond Vanilla Coffee', 
+		ingredients: ['Coffee', 'Almond Milk', 'Vanilla Syrup'], 
+		price: 6 },
+	{ 
+		name: 'Almond Chocolate Coffee', 
+		ingredients: ['Coffee', 'Almond Milk', 'Chocolate'], 
+		price: 6 },
+	{ 
+		name: 'Strawberry Almond Latte', 
+		ingredients: ['Coffee', 'Almond Milk', 'Strawberry'], 
+		price: 6 },
+	{ 
+		name: 'Strawberry Cream Coffee', 
+		ingredients: ['Coffee', '2% Milk', 'Strawberry', 'Whipped Cream'], 
+		price: 7 },
+	{ 
+		name: 'Rainbow Vanilla Latte', 
+		ingredients: ['Coffee', '2% Milk', 'Vanilla Syrup', 'Whipped Cream', 'Rainbow Sprinkles'], 
+		price: 8 },
+	{ 
+		name: 'Cinnamon Cream Coffee', 
+		ingredients: ['Coffee', '2% Milk', 'Cinnamon', 'Whipped Cream'], 
+		price: 7 },
+	{ 
+		name: 'Chocolate Strawberry Coffee', 
+		ingredients: ['Coffee', '2% Milk', 'Chocolate', 'Strawberry', 'Whipped Cream'], 
+		price: 8 },
+	{ 
+		name: 'Rainbow Chocolate Strawberry', 
+		ingredients: ['Coffee', 'Almond Milk', 'Chocolate', 'Whipped Cream', 'Strawberry', 'Rainbow Sprinkles'], 
+		price: 10 }
 ];
 
-let ingredientNames = {
-    machine: "Coffee",
-    "2percent": "2% Milk",
-    oat: "Oat Milk",
-    almond: "Almond Milk",
-    chocolate: "Chocolate",
-    strawberry: "Strawberry",
-    pumpkin: "Pumpkin Syrup",
-    vanilla: "Vanilla Syrup",
-    rainbow: "Rainbow Sprinkles",
-    choco: "Chocolate",
-    sprinkles: "Rainbow Sprinkles",
-    cinnamon: "Cinnamon",
-    cream: "Whipped Cream",
-    frappe: "Frappe",
-    latte: "Latte"
+let names = {
+	machine: 'Coffee',
+	'2percent': '2% Milk',
+	oat: 'Oat Milk',
+	almond: 'Almond Milk',
+	chocolate: 'Chocolate',
+	choco: 'Chocolate',
+	strawberry: 'Strawberry',
+	pumpkin: 'Pumpkin Syrup',
+	vanilla: 'Vanilla Syrup',
+	rainbow: 'Rainbow Sprinkles',
+	sprinkles: 'Rainbow Sprinkles',
+	cinnamon: 'Cinnamon',
+	cream: 'Whipped Cream',
+	frappe: 'Frappe',
+	latte: 'Latte'
 };
 
-let currentRecipe;
-let completedIngredients = [];
-let recipesCompleted = 0;
+let recipeList = document.querySelector('#recipe-items');
+let sendButton = document.querySelector('#sendbutton');
+let moneyText = document.querySelector('#moneyAmount');
+let shopMessage = document.querySelector('#shopMessage');
+let playbutton = document.querySelector('#playbutton-container a');
+let timerText = document.querySelector('#timer');
 
-let recipeList = document.querySelector("#recipe-items");
-let sendButton = document.querySelector("#sendbutton");
-
-function getAvailableRecipes() {
-    let ownedNames = ownedIngredients.map(item => ingredientNames[item] || item);
-
-    return recipies.filter(recipe =>
-        recipe.ingredients.every(ingredient => ownedNames.includes(ingredient))
-    );
+function showMoney() {
+	if (moneyText) {
+		moneyText.textContent = formatMoney(money);
+	}
 }
+showMoney();
+
+let recipe = null;
+let added = [];
 
 function newRecipe() {
-    let availableRecipes = getAvailableRecipes();
+	let have = owned.map(item => names[item]);
+	let options = recipes.filter(r => r.ingredients.every(i => have.includes(i)));
 
-    if (availableRecipes.length === 0) {
-        recipeList.innerHTML = "<li>Buy more ingredients!</li>";
-        currentRecipe = null;
-        return;
-    }
+	if (options.length === 0) {
+		recipe = null;
+		recipeList.innerHTML = '<li>Buy more ingredients!</li>';
+		return;
+	}
 
-    currentRecipe = availableRecipes[
-        Math.floor(Math.random() * availableRecipes.length)
-    ];
+	recipe = options[Math.floor(Math.random() * options.length)];
+	added = [];
+	document.querySelector('#recipe-name').textContent = recipe.name;
 
-	document.querySelector("#recipe-name").textContent = currentRecipe.name;
-    
-    completedIngredients = [];
-    recipeList.innerHTML = "";
-
-    currentRecipe.ingredients.forEach(ingredient => {
-        let listItem = document.createElement("li");
-        listItem.textContent = ingredient;
-        listItem.dataset.ingredient = ingredient;
-        recipeList.appendChild(listItem);
-    });
+	recipeList.innerHTML = '';
+	for (let ingredient of recipe.ingredients) {
+		let li = document.createElement('li');
+		li.textContent = ingredient;
+		recipeList.appendChild(li);
+	}
 }
 
-function updateRecipeList() {
-    document.querySelectorAll("#recipe-items li").forEach(item => {
-        if (completedIngredients.includes(item.dataset.ingredient)) {
-            item.style.color = "green";
-        }
-    });
-}
+document.querySelectorAll('.ingredient-button').forEach(button => {
+	button.classList.remove('selected');
+	if (owned.includes(button.dataset.ingredient)) {
+		button.classList.add('unlocked');
+	} else {
+		button.classList.remove('unlocked');
+	}
 
-document.querySelectorAll(".ingredient-button").forEach(button => {
-    button.addEventListener("click", () => {
-        if (!currentRecipe || !button.classList.contains("unlocked")) {
-            return;
-        }
+	button.addEventListener('click', () => {
+		if (!recipe || !button.classList.contains('unlocked')) {
+			return;
+		}
 
-        let ingredient = ingredientNames[button.dataset.ingredient];
-
-        if (
-            currentRecipe.ingredients.includes(ingredient) &&
-            !completedIngredients.includes(ingredient)
-        ) {
-            completedIngredients.push(ingredient);
-            updateRecipeList();
-        }
-    });
+		let ingredient = names[button.dataset.ingredient];
+		let index = recipe.ingredients.indexOf(ingredient);
+		if (index === -1 || added.includes(ingredient)) {
+			return;
+		}
+		added.push(ingredient);
+		recipeList.children[index].style.color = 'green';
+	});
 });
 
 if (sendButton) {
-    sendButton.addEventListener("click", () => {
-        if (!currentRecipe) {
-            return;
-        }
+	sendButton.addEventListener('click', () => {
+		if (!recipe || added.length !== recipe.ingredients.length) {
+			return;
+		}
 
-        if (completedIngredients.length !== currentRecipe.ingredients.length) {
-            return;
-        }
+		let earned = recipe.price * 100;
+		money += earned;
+		made++;
 
-        let earnedCents = currentRecipe.price * 100;
-        moneyCents += earnedCents;
-        recipesCompleted++;
+		save(moneyKey, money);
+		save(earnedKey, load(earnedKey, 0) + earned);
+		save(madeKey, made);
 
-        localStorage.setItem(moneyStorageKey, String(moneyCents));
-        localStorage.setItem(shiftEarningsKey, String(
-            (Number(localStorage.getItem(shiftEarningsKey)) || 0) + earnedCents
-        ));
-        localStorage.setItem("coffeeClickerRecipesCompleted", String(recipesCompleted));
-
-        updateMoneyDisplay();
-        newRecipe();
-    });
+		showMoney();
+		newRecipe();
+	});
 }
-
-recipesCompleted = Number(
-    localStorage.getItem("coffeeClickerRecipesCompleted")
-) || 0;
 
 if (recipeList) {
 	newRecipe();
 }
 
-
-if (localStorage.getItem(moneyTestSeedKey) !== 'true') {
-	moneyCents = startingMoneyCents;
-	localStorage.setItem(moneyStorageKey, String(moneyCents));
-	localStorage.setItem(moneyTestSeedKey, 'true');
-} else if (!Number.isInteger(moneyCents) || moneyCents < 0) {
-	moneyCents = startingMoneyCents;
-	localStorage.setItem(moneyStorageKey, String(moneyCents));
-}
-    
-let moneyDisplay = document.querySelector('#moneyAmount');
-let shopMessage = document.querySelector('#shopMessage');
-
-let updateMoneyDisplay = () => {
-	if (moneyDisplay) {
-		moneyDisplay.textContent = `$${(moneyCents / 100).toFixed(2)}`;
+function shopmessage(text, success) {
+	if (!shopMessage) {
+		return;
 	}
-};
-updateMoneyDisplay();
+	shopMessage.textContent = text;
+	if (success) {
+		shopMessage.classList.add('shop-message-success');
+		shopMessage.classList.remove('shop-message-error');
+	} else {
+		shopMessage.classList.add('shop-message-error');
+		shopMessage.classList.remove('shop-message-success');
+	}
+}
 
-document.querySelectorAll('.buy-button').forEach((button) => {
+document.querySelectorAll('.buy-button').forEach(button => {
 	button.addEventListener('click', () => {
-		const item = button.closest('.shop-item');
-		const itemName = item.dataset.item;
-		const priceCents = Number(item.dataset.priceCents);
+		let shopItem = button.closest('.shop-item');
+		let item = shopItem.dataset.item;
+		let price = Number(shopItem.dataset.priceCents);
 
-		if (ownedIngredients.includes(itemName)) {
-			if (shopMessage) {
-				shopMessage.textContent = 'You already own this item.';
-			}
+		if (owned.includes(item)) {
+			shopmessage('You already own this item.', false);
 			return;
 		}
-
-		if (moneyCents < priceCents) {
-			if (shopMessage) {
-				shopMessage.textContent = 'Not enough money. Come back after making more drinks!';
-				shopMessage.classList.add('shop-message-error');
-				shopMessage.classList.remove('shop-message-success');
-			}
+		if (money < price) {
+			shopmessage('Not enough money. Come back after making more drinks!', false);
 			return;
 		}
-		moneyCents -= priceCents;
-		ownedIngredients.push(itemName);
-		localStorage.setItem(ingredientStorageKey, JSON.stringify(ownedIngredients));
-		localStorage.setItem(moneyStorageKey, String(moneyCents));
-		if (Number(localStorage.getItem(timerStorageKey)) > Date.now()) {
-			let shiftPurchasesCents = Number(localStorage.getItem(shiftPurchasesKey)) || 0;
-			localStorage.setItem(shiftPurchasesKey, String(shiftPurchasesCents + priceCents));
-		}
-		updateMoneyDisplay();
-		if (shopMessage) {
-			shopMessage.textContent = `You bought ${item.dataset.item}!`;
-			shopMessage.classList.add('shop-message-success');
-			shopMessage.classList.remove('shop-message-error');
-		}
+		money -= price;
+		owned.push(item);
+		save(moneyKey, money);
+		save(ownedKey, owned);
+		showMoney();
+		shopmessage('You bought ' + (names[item] || item) + '!', true);
 	});
 });
 
-
-document.querySelectorAll('.ingredient-button').forEach((button) => {
-    const isOwned = ownedIngredients.includes(button.dataset.ingredient);
-
-    button.classList.toggle('unlocked', isOwned);
-    button.classList.remove('selected');
-});
-
-
-window.addEventListener('storage', (event) => {
-	if (event.key === moneyStorageKey && event.newValue !== null) {
-		moneyCents = Number(event.newValue);
-		updateMoneyDisplay();
+window.addEventListener('storage', (e) => {
+	if (e.key === moneyKey && e.newValue !== null) {
+		money = Number(e.newValue);
+		showMoney();
 	}
 });
 
-const playLink = document.querySelector('#playbutton-container a');
+if (playbutton) {
+	playbutton.addEventListener('click', () => {
+		money = 0;
+		owned = starters.slice();
+		made = 0;
 
-
-if (playLink) {
-    playLink.addEventListener('click', () => {
-        const newTimerEnd = Date.now() + 4 * 60 * 1000;
-
-        moneyCents = 0;
-        localStorage.setItem(moneyStorageKey, '0');
-
-        ownedIngredients = [...starterIngredients];
-        localStorage.setItem(ingredientStorageKey, JSON.stringify(starterIngredients));
-
-        localStorage.setItem(timerStorageKey, String(newTimerEnd));
-        localStorage.setItem(shiftStartMoneyKey, '0');
-        localStorage.setItem(shiftPurchasesKey, '0');
-        localStorage.removeItem(shiftEarningsKey);
-        localStorage.setItem("coffeeClickerRecipesCompleted", "0");
-    });
+		save(moneyKey, money);
+		save(ownedKey, owned);
+		save(madeKey, made);
+		save(timerKey, Date.now() + shiftLength);
+		localStorage.removeItem(earnedKey);
+	});
 }
 
-
-const timerDisplay = document.querySelector('#timer');
-
-if (timerDisplay) {
-	let timerEnd = Number(localStorage.getItem(timerStorageKey));
-
-	if (!Number.isFinite(timerEnd) || timerEnd <= 0) {
-		timerEnd = Date.now() + 4 * 60 * 1000;
-        localStorage.setItem(timerStorageKey, String(timerEnd));
-        localStorage.setItem(shiftStartMoneyKey, String(moneyCents));
-        localStorage.setItem(shiftPurchasesKey, '0');
-        localStorage.removeItem(shiftEarningsKey);
-    }
-
-	const gameOverPopup = document.querySelector('#gameOverPopup');
-	const gameOverOverlay = document.querySelector('#gameOverOverlay');
-	const gameOverClose = document.querySelector('#gameOverClose');
-	const shiftEarningsDisplay = document.querySelector('#shiftEarnings');
-	let timerInterval;
-	let gameOverShown = false;
-
-	const showGameOver = () => {
-		if (gameOverShown || !gameOverPopup || !gameOverOverlay) {
-			return;
-		}
-
-		gameOverShown = true;
-		let earnedCents = Number(localStorage.getItem(shiftEarningsKey));
-
-		if (!Number.isInteger(earnedCents) || earnedCents < 0) {
-			let startingBalance = Number(localStorage.getItem(shiftStartMoneyKey)) || 0;
-			let shiftPurchasesCents = Number(localStorage.getItem(shiftPurchasesKey)) || 0;
-			earnedCents = Math.max(0, moneyCents + shiftPurchasesCents - startingBalance);
-			localStorage.setItem(shiftEarningsKey, String(earnedCents));
-		}
-		let recipesCompletedDisplay = document.querySelector("#recipesCompleted");
-
-        if (recipesCompletedDisplay) {
-            recipesCompletedDisplay.textContent =
-                localStorage.getItem("coffeeClickerRecipesCompleted") || 0;
-        }
-		if (shiftEarningsDisplay) {
-			shiftEarningsDisplay.textContent = `$${(earnedCents / 100).toFixed(2)}`;
-		}
-
-		gameOverPopup.hidden = false;
-		gameOverOverlay.hidden = false;
-	};
-
-	const updateTimer = () => {
-		const remainingSeconds = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
-		const minutes = Math.floor(remainingSeconds / 60);
-		const seconds = String(remainingSeconds % 60).padStart(2, '0');
-
-		timerDisplay.textContent = `${minutes}:${seconds}`;
-
-		if (remainingSeconds === 0) {
-			if (timerInterval) {
-				clearInterval(timerInterval);
-			}
-			showGameOver();
-		}
-	};
-
-	updateTimer();
-	if (timerEnd > Date.now()) {
-		timerInterval = setInterval(updateTimer, 250);
+function gameOver() {
+	let popup = document.querySelector('#gameOverPopup');
+	let overlay = document.querySelector('#gameOverOverlay');
+	if (!popup || !overlay) {
+		return;
 	}
 
-	if (gameOverClose) {
-		gameOverClose.addEventListener('click', () => {
+	let madeText = document.querySelector('#recipesCompleted');
+	let earnedText = document.querySelector('#shiftEarnings');
+	if (madeText) {
+		madeText.textContent = made;
+	}
+	if (earnedText) {
+		earnedText.textContent = formatMoney(load(earnedKey, 0));
+	}
+
+	popup.hidden = false;
+	overlay.hidden = false;
+}
+
+if (timerText) {
+	let end = load(timerKey, 0);
+	if (!end) {
+		end = Date.now() + shiftLength;
+		save(timerKey, end);
+		localStorage.removeItem(earnedKey);
+	}
+
+	let timer;
+
+	function passtime() {
+		let secs = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+		let mins = Math.floor(secs / 60);
+		let rest = secs % 60;
+		if (rest < 10) {
+			rest = '0' + rest;
+		}
+		timerText.textContent = mins + ':' + rest;
+
+		if (secs === 0) {
+			clearInterval(timer);
+			gameOver();
+		}
+	}
+
+	timer = setInterval(passtime, 250);
+	passtime();
+
+	let closeButton = document.querySelector('#gameOverClose');
+	if (closeButton) {
+		closeButton.addEventListener('click', () => {
 			window.location.href = 'start.html';
 		});
 	}
 }
-
-
-

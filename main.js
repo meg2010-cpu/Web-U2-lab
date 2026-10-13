@@ -13,7 +13,11 @@ let ownedIngredients;
 
 try {
 	let savedIngredients = JSON.parse(localStorage.getItem(ingredientStorageKey));
-	ownedIngredients = Array.isArray(savedIngredients) ? savedIngredients : [...starterIngredients];
+	if (Array.isArray(savedIngredients)) {
+		ownedIngredients = savedIngredients;
+	} else {
+		ownedIngredients = [...starterIngredients];
+	}
 } catch {
 	ownedIngredients = [...starterIngredients];
 }
@@ -131,8 +135,8 @@ let currentRecipe;
 let completedIngredients = [];
 let recipesCompleted = 0;
 
-let recipeList = document.getElementById("recipe-items");
-let sendButton = document.getElementById("sendbutton");
+let recipeList = document.querySelector("#recipe-items");
+let sendButton = document.querySelector("#sendbutton");
 
 function getAvailableRecipes() {
     let ownedNames = ownedIngredients.map(item => ingredientNames[item] || item);
@@ -155,7 +159,7 @@ function newRecipe() {
         Math.floor(Math.random() * availableRecipes.length)
     ];
 
-    document.getElementById("recipe-name").textContent = currentRecipe.name;
+	document.querySelector("#recipe-name").textContent = currentRecipe.name;
     
     completedIngredients = [];
     recipeList.innerHTML = "";
@@ -237,8 +241,8 @@ if (localStorage.getItem(moneyTestSeedKey) !== 'true') {
 	localStorage.setItem(moneyStorageKey, String(moneyCents));
 }
     
-let moneyDisplay = document.getElementById('moneyAmount');
-let shopMessage = document.getElementById('shopMessage');
+let moneyDisplay = document.querySelector('#moneyAmount');
+let shopMessage = document.querySelector('#shopMessage');
 
 let updateMoneyDisplay = () => {
 	if (moneyDisplay) {
@@ -308,15 +312,12 @@ if (playLink) {
     playLink.addEventListener('click', () => {
         const newTimerEnd = Date.now() + 4 * 60 * 1000;
 
-        // reset money
         moneyCents = 0;
         localStorage.setItem(moneyStorageKey, '0');
 
-        // reset owned ingredients
         ownedIngredients = [...starterIngredients];
         localStorage.setItem(ingredientStorageKey, JSON.stringify(starterIngredients));
 
-        // reset shift
         localStorage.setItem(timerStorageKey, String(newTimerEnd));
         localStorage.setItem(shiftStartMoneyKey, '0');
         localStorage.setItem(shiftPurchasesKey, '0');
@@ -326,7 +327,7 @@ if (playLink) {
 }
 
 
-const timerDisplay = document.getElementById('timer');
+const timerDisplay = document.querySelector('#timer');
 
 if (timerDisplay) {
 	let timerEnd = Number(localStorage.getItem(timerStorageKey));
@@ -339,10 +340,10 @@ if (timerDisplay) {
         localStorage.removeItem(shiftEarningsKey);
     }
 
-	const gameOverPopup = document.getElementById('gameOverPopup');
-	const gameOverOverlay = document.getElementById('gameOverOverlay');
-	const gameOverClose = document.getElementById('gameOverClose');
-	const shiftEarningsDisplay = document.getElementById('shiftEarnings');
+	const gameOverPopup = document.querySelector('#gameOverPopup');
+	const gameOverOverlay = document.querySelector('#gameOverOverlay');
+	const gameOverClose = document.querySelector('#gameOverClose');
+	const shiftEarningsDisplay = document.querySelector('#shiftEarnings');
 	let timerInterval;
 	let gameOverShown = false;
 
@@ -360,7 +361,7 @@ if (timerDisplay) {
 			earnedCents = Math.max(0, moneyCents + shiftPurchasesCents - startingBalance);
 			localStorage.setItem(shiftEarningsKey, String(earnedCents));
 		}
-        let recipesCompletedDisplay = document.getElementById("recipesCompleted");
+		let recipesCompletedDisplay = document.querySelector("#recipesCompleted");
 
         if (recipesCompletedDisplay) {
             recipesCompletedDisplay.textContent =
